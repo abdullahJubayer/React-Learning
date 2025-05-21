@@ -8,26 +8,47 @@ export type TodoModel = {
   status: Status;
 };
 
+let todos: Array<TodoModel> = [];
+
 export function getTodos(): Array<TodoModel> {
   const items = localStorage.getItem("todos");
-  return items ? JSON.parse(items) : [];
+  const todoList = items ? JSON.parse(items) : [];
+  todos = todoList;
+  return todoList;
 }
 
-export function createTodo(newTodos: Array<TodoModel>) {
-  localStorage.setItem("todos", JSON.stringify(newTodos));
+function save() {
+  localStorage.setItem("todos", JSON.stringify(todos));
 }
 
-// export function updateTodo(todos: Array<TodoModel>, updatedTodo: TodoModel) {
-//   const dartyIndex = todos.findIndex((item) => item.name == updateTodo.name);
-//   todos[dartyIndex] = updatedTodo;
-//   localStorage.setItem("todos", JSON.stringify(todos));
-// }
+export function addTodo(todoName: string): Array<TodoModel> {
+  const todo: TodoModel = {
+    name: todoName,
+    description: "",
+    createdAt: Date().toLocaleString(),
+    updatedAt: Date().toLocaleString(),
+    status: "InProgress",
+  };
 
-// export function deleteTodo(todos: Array<TodoModel>, deletedTodo: TodoModel) {
-//   const deletedIndex = todos.findIndex((item) => item.name == deletedTodo.name);
-//   localStorage.setItem("todos", JSON.stringify(todos));
-// }
+  todos.push(todo);
+  save();
+  return todos;
+}
 
-// export function clear() {
-//   localStorage.removeItem("todos");
-// }
+export function updateTodo(updatedTodo: TodoModel): Array<TodoModel> {
+  const dartyIndex = todos.findIndex((item) => item.name == updatedTodo.name);
+  todos[dartyIndex] = updatedTodo;
+  save();
+  return todos;
+}
+
+export function deleteTodo(deletedTodo: TodoModel): Array<TodoModel> {
+  const updatedItems = todos.filter((item) => item.name !== deletedTodo.name);
+  todos = updatedItems;
+  save();
+  return todos;
+}
+
+export function clearTodo() {
+  localStorage.removeItem("todos");
+}

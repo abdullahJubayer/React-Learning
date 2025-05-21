@@ -33,14 +33,14 @@ export const Form: React.FC<FormProps> = ({ addCallback, clearCallback }) => {
           onKeyDown={handleEnter}
         />
         <button
-          className="text-white px-6 bg-gray-700 rounded-md ms-2"
+          className="text-white px-6 bg-gray-700 rounded-md ms-2 whitespace-nowrap"
           onClick={(e) => {
             e.preventDefault();
             console.log("print");
             clearCallback();
           }}
         >
-          Clear
+          Clear all
         </button>
       </div>
     </form>
