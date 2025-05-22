@@ -19,6 +19,7 @@ However, we can also store arrays and objects by converting them into strings us
 ```javascript
 const person = { name: "John", age: 30 };
 localStorage.setItem("user", JSON.stringify(person));
+```
 
 ---
 
@@ -26,4 +27,3 @@ localStorage.setItem("user", JSON.stringify(person));
 
 - `localStorage` is **not encrypted**, so it is not safe to store sensitive data like authentication credentials.
 - Most browsers allow only **about 5MB** of storage per origin.
-```
