@@ -9,6 +9,7 @@ import {
   clearTodo,
   TodoModel,
 } from "./LocalStorageHelper";
+import { Search } from "./Search";
 
 export type FormProps = {
   addCallback: (text: string) => void;
@@ -20,27 +21,43 @@ export type ListItemProps = {
   completeCallback: (todo: TodoModel) => void;
 };
 
+export type SearchProps = {
+  searchCallback: (text: string) => void;
+};
+
 export function Body() {
-  const [items, setItems] = useState<Array<TodoModel>>(getTodos());
+  const [originalItems, setOriginalItems] = useState<Array<TodoModel>>(
+    getTodos()
+  );
+  const [items, setItems] = useState<Array<TodoModel>>(originalItems);
+
+  useEffect(() => {
+    setItems(originalItems);
+  }, [originalItems]);
 
   const add = (todoName: string) => {
     const updatedItems = addTodo(todoName);
-    setItems(updatedItems);
+    setOriginalItems(updatedItems);
   };
 
   const update = (updatedTodo: TodoModel) => {
     const updatedItems = updateTodo(updatedTodo);
-    setItems(updatedItems);
+    setOriginalItems(updatedItems);
   };
 
   const deleteFromTodo = (deletedTodo: TodoModel) => {
     const updatedItems = deleteTodo(deletedTodo);
-    setItems(updatedItems);
+    setOriginalItems(updatedItems);
   };
 
   const clearAll = () => {
     clearTodo();
-    setItems([]);
+    setOriginalItems([]);
+  };
+
+  const filterItems = (search: string) => {
+    const filter = originalItems.filter((item) => item.name.match(search));
+    setItems(filter);
   };
 
   return (
@@ -59,6 +76,7 @@ export function Body() {
             )
         )}
         <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
+        <Search searchCallback={filterItems} />
         {items.map(
           (data) =>
             data.status != "Completed" && (
