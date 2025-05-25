@@ -1,15 +1,18 @@
 import { useRef } from "react";
-import { FormProps } from "./Body";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./ReduxStorage";
+import { addTodo, clear } from "./TodoSlice";
 
-export const Form: React.FC<FormProps> = ({ addCallback, clearCallback }) => {
+export const Form: React.FC = () => {
   const text = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
       const value = text.current?.value.trim();
       if (value) {
-        addCallback(value);
+        dispatch(addTodo(value));
         text.current!.value = "";
       }
     }
@@ -36,8 +39,7 @@ export const Form: React.FC<FormProps> = ({ addCallback, clearCallback }) => {
           className="text-white px-6 bg-gray-700 rounded-md ms-2 whitespace-nowrap"
           onClick={(e) => {
             e.preventDefault();
-            console.log("print");
-            clearCallback();
+            dispatch(clear());
           }}
         >
           Clear all

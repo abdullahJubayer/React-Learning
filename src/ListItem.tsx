@@ -1,11 +1,12 @@
 import React from "react";
 import { ListItemProps } from "./Body";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./ReduxStorage";
+import { updateTodo, deleteTodo, TodoModel } from "./TodoSlice";
 
-export const ListItem: React.FC<ListItemProps> = ({
-  data,
-  removeCallback,
-  completeCallback,
-}) => {
+export const ListItem: React.FC<ListItemProps> = ({ data }) => {
+  const dispatch = useDispatch<AppDispatch>();
+
   return (
     <div className="max-w-sm mx-auto my-4 flex justify-between it items-baseline">
       <input
@@ -13,9 +14,11 @@ export const ListItem: React.FC<ListItemProps> = ({
         name="isComplete"
         checked={data.status === "Completed" ? true : false}
         onChange={(e) => {
-          const updated = data;
-          updated.status = e.target.checked ? "Completed" : "InProgress";
-          completeCallback(updated);
+          const updated: TodoModel = {
+            ...data,
+            status: e.target.checked ? "Completed" : "InProgress",
+          };
+          dispatch(updateTodo(updated));
         }}
       />
       <div className="mx-4">
@@ -33,7 +36,7 @@ export const ListItem: React.FC<ListItemProps> = ({
         alt="more-btn"
         className="w-5 h-4"
         onClick={() => {
-          removeCallback(data);
+          dispatch(deleteTodo(data));
         }}
       />
     </div>
